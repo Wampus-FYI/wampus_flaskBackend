@@ -2,15 +2,13 @@ import os
 from flask import Flask, request, jsonify
 import firebase_admin
 from firebase_admin import auth
-from firebase_admin import credentials
+from firebase_admin import credential
 
 app = Flask(__name__)
 
-# Initialize Firebase Admin SDK
-with open('firebasekey.txt') as f:
-    firebase_key = f.read().strip()
-cred = credentials.Certificate(firebase_key)
-firebase_admin.initialize_app(cred)
+# Todo: change firebase to mongo
+FLASK_API = { app.config.get("API_KEY") }
+firebase_admin.initialize_app(FLASK_API)
 
 @app.route('/login', methods=['POST'])
 def login():

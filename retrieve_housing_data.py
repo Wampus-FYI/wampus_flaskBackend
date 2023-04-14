@@ -1,0 +1,1 @@
+# yinuo handle GET method to retrieve housing data from MongoDB
