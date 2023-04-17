@@ -3,11 +3,13 @@ from flask import Flask, request, jsonify
 import firebase_admin
 from firebase_admin import auth
 from firebase_admin import credential
+from configparser import ConfigParser
 
 app = Flask(__name__)
+config = ConfigParser()
+config.read('.config.cfg')
 
-# Todo: change firebase to mongo
-FLASK_API = { app.config.get("API_KEY") }
+FLASK_API = config.get("DATABASE","FIREBASE")
 firebase_admin.initialize_app(FLASK_API)
 
 @app.route('/login', methods=['POST'])
