@@ -1,6 +1,7 @@
 from pymongo import MongoClient, errors
 from pymongo.server_api import ServerApi
 from flask import jsonify, request, Flask
+from bson import json_util
 import certifi
 import json
 
@@ -68,13 +69,27 @@ def submit_form():
 @app.route('/getapt/<apt_name>', methods=['GET'])
 def get_apt_details(apt_name):
     print(apt_name)
+    overview = request.args.get('overview', 'false').lower() == 'true'
     try:
-        data = list(apt_data_collection.find({'Apt': apt_name}))
-        return jsonify(data), 200
+        data = list(aggregated_data_collection.find({'Apt': apt_name}))
+        if overview:
+            for year in data[0]['Rent']:
+                print(year)
+                if data[0]['Rent'][year] == None:
+                    continue
+                for num_beds in range(len(data[0]['Rent'][year])):
+                    if data[0]['Rent'][year][num_beds] == None:
+                        continue
+                    for num_baths in range(len(data[0]['Rent'][year][num_beds])):
+                        if data[0]['Rent'][year][num_beds][num_baths] == None:
+                            continue
+                        data[0]['Rent'][year][num_beds][num_baths] = sum(data[0]['Rent'][year][num_beds][num_baths])/len(data[0]['Rent'][year][num_beds][num_baths])
+        return json.loads(json_util.dumps(data)), 200
     except Exception as e:
         print(e)
         return jsonify({'success': False}), 401
 
+# Add search
 
 
 
