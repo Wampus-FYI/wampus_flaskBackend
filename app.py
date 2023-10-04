@@ -68,13 +68,11 @@ def submit_form():
 
 @app.route('/getapt/<apt_name>', methods=['GET'])
 def get_apt_details(apt_name):
-    print(apt_name)
     overview = request.args.get('overview', 'false').lower() == 'true'
     try:
         data = list(aggregated_data_collection.find({'Apt': apt_name}))
         if overview:
             for year in data[0]['Rent']:
-                print(year)
                 if data[0]['Rent'][year] == None:
                     continue
                 for num_beds in range(len(data[0]['Rent'][year])):
