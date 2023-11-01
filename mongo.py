@@ -1,4 +1,4 @@
-from flask import Flask, g
+from flask import Flask
 from pymongo import MongoClient
 from configparser import ConfigParser
 
