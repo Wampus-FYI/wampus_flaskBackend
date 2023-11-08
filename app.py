@@ -70,6 +70,8 @@ def get_apt_details(apt_name):
     print(apt_name)
     try:
         data = list(apt_data_collection.find({'Apt': apt_name}))
+        # print('test', apt_data_collection.find({'Apt': apt_name}))
+        # print(data)
         return jsonify(data), 200
     except Exception as e:
         print(e)
