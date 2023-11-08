@@ -1,6 +1,7 @@
-
 #env variable 
 .env.*.DS_Store
 .DS_Store
 .venv/.DS_Store
 **/.DS_Store
+gmaps-apikey.txt
+survey_data_cleaned.csv
