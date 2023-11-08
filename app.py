@@ -1,9 +1,15 @@
 from pymongo import MongoClient, errors
 from pymongo.server_api import ServerApi
 from flask import jsonify, request, Flask
+from flask_cors import CORS
 from bson import json_util
 import certifi
 import json
+
+app = Flask(__name__)
+
+# enable CORS
+CORS(app, resources={r'/*': {'origins': '*'}})
 
 # Create a new client and connect to the server
 uri = "mongodb+srv://michaelnguyen:XAgiAkTP81ZzJ1bT@cluster0.aeeijua.mongodb.net/?retryWrites=true&w=majority&ssl=true&ssl_cert_reqs=CERT_NONE"
@@ -23,8 +29,6 @@ database_name = 'aptData'
 # collection = db[collection_name]
 apt_data_collection = client[database_name]['aptData']
 aggregated_data_collection = client[database_name]['aggregatedData']
-
-app = Flask(__name__)
 
 
 @app.route('/')
@@ -86,6 +90,23 @@ def get_apt_details(apt_name):
     except Exception as e:
         print(e)
         return jsonify({'success': False}), 401
+
+@app.route('/get-all-listing', methods=['GET'])
+def get_data():
+    try:
+        # Getting database and corresponding collection
+        # with app.app_context():
+        db = init_mongo()
+        collection = db.aggregatedData
+        data = list(collection.find({}))
+        # Send token back to client
+        return json_util.dumps(data), 200
+
+    except Exception as e:
+        print(e)
+        # Return error if authentication fails
+        return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+
 
 # Add search
 
