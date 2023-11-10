@@ -1,5 +1,6 @@
 from pymongo import MongoClient, errors
 from pymongo.server_api import ServerApi
+from mongo import init_mongo
 from flask import jsonify, request, Flask
 from flask_cors import CORS
 from bson import json_util
@@ -94,13 +95,20 @@ def get_apt_details(apt_name):
 @app.route('/get-all-listing', methods=['GET'])
 def get_data():
     try:
-        # Getting database and corresponding collection
-        # with app.app_context():
-        db = init_mongo()
-        collection = db.aggregatedData
-        data = list(collection.find({}))
-        # Send token back to client
-        return json_util.dumps(data), 200
+        data = list(apt_data_collection.find({}))
+        return json.loads(json_util.dumps(data)), 200
+
+    except Exception as e:
+        print(e)
+        # Return error if authentication fails
+        return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
+
+
+@app.route('/get-all-apts', methods=['GET'])
+def get_all_aggregated_data():
+    try:
+        data = list(aggregated_data_collection.find({}))
+        return json.loads(json_util.dumps(data)), 200
 
     except Exception as e:
         print(e)
