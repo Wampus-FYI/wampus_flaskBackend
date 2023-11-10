@@ -75,6 +75,7 @@ def submit_form():
 def get_apt_details(apt_name):
     overview = request.args.get('overview', 'false').lower() == 'true'
     try:
+
         data = list(aggregated_data_collection.find({'Apt': apt_name}))
         if overview:
             for year in data[0]['Rent']:
@@ -88,6 +89,7 @@ def get_apt_details(apt_name):
                             continue
                         data[0]['Rent'][year][num_beds][num_baths] = sum(data[0]['Rent'][year][num_beds][num_baths])/len(data[0]['Rent'][year][num_beds][num_baths])
         return json.loads(json_util.dumps(data)), 200
+
     except Exception as e:
         print(e)
         return jsonify({'success': False}), 401
