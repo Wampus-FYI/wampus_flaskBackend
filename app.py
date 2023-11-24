@@ -32,12 +32,7 @@ apt_data_collection = client[database_name]['aptData']
 aggregated_data_collection = client[database_name]['aggregatedData']
 
 
-@app.route('/')
-def hello():
-    return 'Hello, World!'
-
-
-@app.route('/getapts/', methods=['GET'])
+@app.route('/get-unique-apts/', methods=['GET'])
 def get_apts():
     unique_apts = apt_data_collection.distinct('Apt')
     return unique_apts
@@ -49,7 +44,7 @@ def get_years():
     return unique_years
 
 
-@app.route('/submitform/', methods=['POST'])
+@app.route('/submit-form/', methods=['POST'])
 def submit_form():
     data = request.data.decode('utf-8')  # Assuming the data sent is a JSON string
     data_dict = json.loads(data)
@@ -71,7 +66,7 @@ def submit_form():
     return jsonify(success=True), 200
 
 
-@app.route('/getapt/<apt_name>', methods=['GET'])
+@app.route('/get-apt/<apt_name>', methods=['GET'])
 def get_apt_details(apt_name):
     overview = request.args.get('overview', 'false').lower() == 'true'
     try:
@@ -94,7 +89,7 @@ def get_apt_details(apt_name):
         print(e)
         return jsonify({'success': False}), 401
 
-@app.route('/get-all-listing', methods=['GET'])
+@app.route('/get-apts', methods=['GET'])
 def get_data():
     try:
         data = list(apt_data_collection.find({}))
@@ -104,21 +99,6 @@ def get_data():
         print(e)
         # Return error if authentication fails
         return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
-
-
-@app.route('/get-all-apts', methods=['GET'])
-def get_all_aggregated_data():
-    try:
-        data = list(aggregated_data_collection.find({}))
-        return json.loads(json_util.dumps(data)), 200
-
-    except Exception as e:
-        print(e)
-        # Return error if authentication fails
-        return jsonify({'success': False, 'error': 'Invalid credentials'}), 401
-
-
-# Add search
 
 
 
