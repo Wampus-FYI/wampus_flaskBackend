@@ -90,9 +90,9 @@ def get_apt_details(apt_name):
         return jsonify({'success': False}), 401
 
 @app.route('/get-apts', methods=['GET'])
-def get_data():
+def get_all_aggregated_data():
     try:
-        data = list(apt_data_collection.find({}))
+        data = list(aggregated_data_collection.find({}))
         return json.loads(json_util.dumps(data)), 200
 
     except Exception as e:
